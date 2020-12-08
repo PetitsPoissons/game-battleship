@@ -215,14 +215,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // get the grid id where the ship's last div will land if horizontal
     let gridIdShipLastDivHorizontal =
       parseInt(this.dataset.id) + shipLastIndex - selectedShipGrabIndex;
-    // get the grid id where the ship's last div will land if vertical
-    let gridIdShipLastDivVertical =
-      parseInt(this.dataset.id) +
-      shipLastIndex * nbSquares -
-      selectedShipGrabIndex * nbSquares;
+    // get the grid id where the ship's first div will land if vertical
+    let gridIdShipFirstDivVertical =
+      parseInt(this.dataset.id) - selectedShipGrabIndex * nbSquares;
 
     // determine off-limit divs for ships placed horizontally
-    const notAllowedHorizontal = [
+    const possiblyNotAllowedHorizontal = [
       10,
       20,
       30,
@@ -266,13 +264,13 @@ document.addEventListener('DOMContentLoaded', () => {
       93,
       103,
     ];
-    let newNotAllowedHorizontal = notAllowedHorizontal.splice(
+    let notAllowedHorizontal = possiblyNotAllowedHorizontal.splice(
       0,
       10 * shipLastIndex
     );
 
     // determine off-limit divs for ships placed vertically
-    const notAllowedVertical = [
+    const possiblyNotAllowedVertical = [
       99,
       98,
       97,
@@ -314,14 +312,14 @@ document.addEventListener('DOMContentLoaded', () => {
       61,
       60,
     ];
-    let newNotAllowedVertical = notAllowedVertical.splice(
+    let notAllowedVertical = possiblyNotAllowedVertical.splice(
       0,
       10 * shipLastIndex
     );
 
     if (
       isHorizontal &&
-      !newNotAllowedHorizontal.includes(gridIdShipLastDivHorizontal)
+      !notAllowedHorizontal.includes(gridIdShipLastDivHorizontal)
     ) {
       for (let i = 0; i < draggedShipLength; i++) {
         userSquares[
@@ -330,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else if (
       !isHorizontal &&
-      !newNotAllowedVertical.includes(gridIdShipLastDivVertical)
+      !notAllowedVertical.includes(gridIdShipFirstDivVertical)
     ) {
       for (let i = 0; i < draggedShipLength; i++) {
         userSquares[
