@@ -85,6 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    // on timeout
+    socket.on('timeout', () => {
+      infoDisplay.innerHTML = 'You have reached the 10 minute limit.';
+    });
+
     // 'ready' button click
     startButton.addEventListener('click', () => {
       if (allShipsPlaced) {
@@ -510,6 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
       turnDisplay.innerHTML = 'Your Go';
       enemySquares.forEach((square) =>
         square.addEventListener('click', function (e) {
+          shotFired = square.dataset.id;
           revealSquare(square.classList);
         })
       );
@@ -650,7 +656,7 @@ document.addEventListener('DOMContentLoaded', () => {
         enemyCarrierCount ===
       50
     ) {
-      infoDisplay.innerHTML = 'COMPUTER WINS!';
+      infoDisplay.innerHTML = 'ENEMY WINS!';
       gameOver();
     }
   }
