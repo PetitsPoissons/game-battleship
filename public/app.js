@@ -48,14 +48,59 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         playerNum = parseInt(num);
         if (playerNum === 1) currentPlayer = 'enemy';
-        console.log(playerNum);
+        console.log(`You are player ${playerNum + 1}.`);
+
+        // get other player' status
+        socket.emit('check-players');
       }
     });
 
     // another player has connected or disconnected
     socket.on('player-connection', (num) => {
-      console.log(`Player number ${num} has connected or disconnected`);
+      console.log(
+        `Player number ${parseInt(num) + 1} has connected or disconnected`
+      );
+      playerConnectedOrDisconnected(num);
     });
+
+    // on enemy ready
+    socket.on('enemy-ready', (num) => {
+      enemyReady = true;
+      playerReady(num);
+      if (ready) playGameMulti(socket);
+    });
+
+    // check player status
+    socket.on('check-players', (players) => {
+      players.forEach((player, index) => {
+        if (player.connected) playerConnectedOrDisconnected(index);
+        if (player.ready) {
+          playerReady(index);
+          if (index !== playerReady) enemyReady = true;
+        }
+      });
+    });
+
+    // 'ready' button click
+    startButton.addEventListener('click', () => {
+      if (allShipsPlaced) {
+        playGameMulti(socket);
+      } else {
+        infoDisplay.innerHTML = 'Please place all ships';
+      }
+    });
+
+    // show whether a player is connected (green) or disconnected (red)
+    function playerConnectedOrDisconnected(num) {
+      let playerClass = `.p${parseInt(num) + 1}`; // we want to access the classes .p1 or .p2
+      console.log('playerClass', playerClass);
+      document
+        .querySelector(`${playerClass} .connected span`)
+        .classList.toggle('green');
+      // if the player that is connecting is us. then
+      if (parseInt(num) === playerNum)
+        document.querySelector(playerClass).style.fontWeight = 'bold';
+    }
   }
 
   // Single player mode
@@ -385,11 +430,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // remove ship from display grid once it's been placed
     displayGrid.removeChild(draggedShip);
+
+    // verify that user placed all his/her ships
+    if (!displayGrid.querySelector('.ship')) allShipsPlaced = true;
   }
 
   function dragEnd() {}
 
-  // Game Logic
+  // Game logic for multiplayer
+  function playGameMulti(socket) {
+    if (isGameOver) return;
+    if (!ready) {
+      socket.emit('player-ready');
+      ready = true;
+      playerReady(playerNum);
+    }
+
+    if (enemyReady) {
+      if (currentPlayer === 'user') {
+        turnDisplay.innerHTML = 'Your Go';
+      }
+      if (currentPlayer === 'enemy') {
+        turnDisplay.innerHTML = "Enemy's Go";
+      }
+    }
+  }
+
+  function playerReady(num) {
+    let playerClass = `.p${parseInt(num) + 1}`;
+    document
+      .querySelector(`${playerClass} .ready span`)
+      .classList.toggle('green');
+  }
+
+  // Game logic for single player
   function playGameSingle() {
     if (isGameOver) return;
     if (currentPlayer === 'user') {
