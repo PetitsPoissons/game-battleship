@@ -1,10 +1,10 @@
 # game-battleship
 
-![ScreenShot](public/img/game-battleship-500.jpg)
+![ScreenShot](public/img/battleship-screenshot.png)
 
 Classic game of battleship adapted for the web. Users can choose to play either against the computer (single player mode) or against another user (multi player mode). The app is currently deployed on heroku at [https://game-battleship.herokuapp.com/](https://game-battleship.herokuapp.com/).
 
-We initially adapted this app from the fun and educational videos of YouTubers [Ania Kubow](https://youtu.be/U64vIhh0TyM), [codeSTACKr](https://youtu.be/TpAwggQJPUQ), and [Web Dev Simplified](https://youtu.be/G6JTM-zt-dQ) and are currently upgrading it with the following features:
+I initially adapted this app from the fun and educational videos of YouTubers [Ania Kubow](https://youtu.be/U64vIhh0TyM), [codeSTACKr](https://youtu.be/TpAwggQJPUQ), and [Web Dev Simplified](https://youtu.be/G6JTM-zt-dQ) and I am currently upgrading it with the following features:
 - users can "re"position their ships before starting a game
 - for the single player mode, the computer is programmed with a strategy to fire instead of random firing
 - for the multi player mode, users have chat area where they can engage with each other
