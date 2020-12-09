@@ -453,20 +453,27 @@ document.addEventListener('DOMContentLoaded', () => {
       !notAllowedHorizontal.includes(gridIdShipLastDivHorizontal)
     ) {
       for (let i = 0; i < draggedShipLength; i++) {
+        let directionClass = 'middle';
+        if (i === 0) directionClass = 'start'; // to determine which div if the start of the ship
+        if (i === draggedShipLength - 1) directionClass = 'end'; // and which is the end for styling purposes
         userSquares[
           parseInt(this.dataset.id) - selectedShipGrabIndex + i
-        ].classList.add('taken', shipClass);
+        ].classList.add('taken', 'horizontal', directionClass, shipClass);
       }
     } else if (
       !isHorizontal &&
       !notAllowedVertical.includes(gridIdShipFirstDivVertical)
     ) {
       for (let i = 0; i < draggedShipLength; i++) {
+        let directionClass = 'middle';
+        if (i === 0) directionClass = 'start'; // to determine which div if the start of the ship
+        if (i === draggedShipLength - 1) directionClass = 'end'; // and which is the end for styling purposes
+
         userSquares[
           parseInt(this.dataset.id) -
             nbSquares * selectedShipGrabIndex +
             nbSquares * i
-        ].classList.add('taken', shipClass);
+        ].classList.add('taken', 'vertical', directionClass, shipClass);
       }
     } else return;
 
