@@ -58,7 +58,8 @@ body {
   border: 1px solid rgba(173, 219, 213, 0.7);
 }
 
-.grid-enemy > .taken {
+.grid-enemy > .taken,
+.grid-enemy > .boom {
   background-color: var(--grid) !important;
   border-radius: 0 !important;
 }
@@ -134,7 +135,7 @@ body {
 @keyframes ripplesX {
   0% {
     opacity: 1;
-    transform: scaleX(1);
+    transform: scaleX(1.05);
   }
 
   75% {
@@ -143,7 +144,7 @@ body {
 
   100% {
     opacity: 0;
-    transform: scaleX(1.5);
+    transform: scaleX(1.35);
   }
 }
 
@@ -159,7 +160,7 @@ body {
 
   100% {
     opacity: 0;
-    transform: scaleY(1.5);
+    transform: scaleY(1.35);
   }
 }
 
@@ -220,6 +221,7 @@ body {
   --width: 1;
 }
 
+/* Buttons and Info Area */
 .hidden-info {
   font-size: 1.5rem;
   align-items: center;
@@ -230,24 +232,80 @@ body {
   margin: 1rem;
 }
 
+/* Firing */
+.miss,
 .boom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.boom::after,
+.miss::after {
+  content: '';
+  position: absolute;
+  border-radius: 100%;
+  width: 2vmin;
+  height: 2vmin;
+}
+
+.miss::after {
+  background-color: white;
+}
+
+.boom::after {
   background-color: red;
 }
-.miss {
-  background-color: black;
+
+.miss::before {
+  content: '';
+  position: absolute;
+  animation: hit 0.2s ease-out forwards;
+  border: 0.1vmin solid white;
+  border-radius: 100%;
+  width: 2vmin;
+  height: 2vmin;
+}
+
+.boom {
+  animation: boom 0.2s ease-out forwards;
+}
+
+@keyframes hit {
+  0% {
+    opacity: 1;
+    transform: scale(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(4);
+  }
+}
+
+@keyframes boom {
+  0% {
+    background-color: red;
+  }
+
+  100% {
+    background-color: var(--ship);
+  }
+}
+
+/* Multiplayer */
+.player {
+  margin: 2vmin;
 }
 
 .connected,
 .ready {
   font-weight: normal;
+  opacity: 0.25;
+  text-decoration: line-through;
 }
-.connected span,
-.ready span {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  background: red;
-}
-span.green {
-  background: green;
+.connected.active,
+.ready.active {
+  opacity: 1;
+  text-decoration: none;
 }

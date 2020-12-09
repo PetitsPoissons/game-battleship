@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const rotateButton = document.querySelector('#rotate');
   const turnDisplay = document.querySelector('#whose-go');
   const infoDisplay = document.querySelector('#info');
+  const setupButtons = document.querySelector('.setup-buttons');
   const userSquares = [];
   const enemySquares = [];
   let isHorizontal = true;
@@ -112,7 +113,10 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('enemy-ready', (num) => {
       enemyReady = true;
       playerReady(num);
-      if (ready) playGameMulti(socket);
+      if (ready) {
+        playGameMulti(socket);
+        setupButtons.style.display = 'none';
+      }
     });
 
     // check players status
@@ -169,8 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function playerConnected(num) {
       let playerClass = `.p${parseInt(num) + 1}`; // we want to access the classes .p1 or .p2
       document
-        .querySelector(`${playerClass} .connected span`)
-        .classList.toggle('green');
+        .querySelector(`${playerClass} .connected`)
+        .classList.toggle('active');
       // if the player that is connecting is us. then
       if (parseInt(num) === playerNum)
         document.querySelector(playerClass).style.fontWeight = 'bold';
@@ -180,12 +184,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function playerDisconnected(num) {
       let playerClass = `.p${parseInt(num) + 1}`; // we want to access the classes .p1 or .p2
       document
-        .querySelector(`${playerClass} .connected span`)
-        .classList.toggle('green');
+        .querySelector(`${playerClass} .connected`)
+        .classList.toggle('active');
       // if the player is disconnected then toggle ready back
       document
-        .querySelector(`${playerClass} .ready span`)
-        .classList.toggle('green');
+        .querySelector(`${playerClass} .ready`)
+        .classList.toggle('active');
     }
   }
 
@@ -196,7 +200,10 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Placing ship: ', shipArray[i].name);
       generate(shipArray[i]);
     }
-    startButton.addEventListener('click', playGameSingle);
+    startButton.addEventListener('click', () => {
+      setupButtons.style.display = 'none';
+      playGameSingle();
+    });
   }
 
   // Create the user and the computer boards
@@ -247,8 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
       isTaken = shipDivsIdArray.some((id) =>
         enemySquares[id].classList.contains('taken')
       );
-      if (isTaken) {
-      }
     }
 
     // place ship
@@ -448,33 +453,61 @@ document.addEventListener('DOMContentLoaded', () => {
       10 * shipLastIndex
     );
 
+    let isTaken = false;
     if (
       isHorizontal &&
       !notAllowedHorizontal.includes(gridIdShipLastDivHorizontal)
     ) {
+      // check if any of the squares the ship will be painted on is already taken
       for (let i = 0; i < draggedShipLength; i++) {
-        let directionClass = 'middle';
-        if (i === 0) directionClass = 'start'; // to determine which div if the start of the ship
-        if (i === draggedShipLength - 1) directionClass = 'end'; // and which is the end for styling purposes
-        userSquares[
-          parseInt(this.dataset.id) - selectedShipGrabIndex + i
-        ].classList.add('taken', 'horizontal', directionClass, shipClass);
+        if (
+          userSquares[
+            parseInt(this.dataset.id) - selectedShipGrabIndex + i
+          ].classList.contains('taken')
+        ) {
+          isTaken = true;
+          break;
+        }
       }
+      if (!isTaken) {
+        for (let i = 0; i < draggedShipLength; i++) {
+          let directionClass = 'middle';
+          if (i === 0) directionClass = 'start'; // to determine which div if the start of the ship
+          if (i === draggedShipLength - 1) directionClass = 'end'; // and which is the end for styling purposes
+          userSquares[
+            parseInt(this.dataset.id) - selectedShipGrabIndex + i
+          ].classList.add('taken', 'horizontal', directionClass, shipClass);
+        }
+      } else return;
     } else if (
       !isHorizontal &&
       !notAllowedVertical.includes(gridIdShipFirstDivVertical)
     ) {
+      // check if any of the squares the ship will be painted on is already taken
       for (let i = 0; i < draggedShipLength; i++) {
-        let directionClass = 'middle';
-        if (i === 0) directionClass = 'start'; // to determine which div if the start of the ship
-        if (i === draggedShipLength - 1) directionClass = 'end'; // and which is the end for styling purposes
-
-        userSquares[
-          parseInt(this.dataset.id) -
-            nbSquares * selectedShipGrabIndex +
-            nbSquares * i
-        ].classList.add('taken', 'vertical', directionClass, shipClass);
+        if (
+          userSquares[
+            parseInt(this.dataset.id) -
+              nbSquares * selectedShipGrabIndex +
+              nbSquares * i
+          ].classList.contains('taken')
+        ) {
+          isTaken = true;
+          break;
+        }
       }
+      if (!isTaken) {
+        for (let i = 0; i < draggedShipLength; i++) {
+          let directionClass = 'middle';
+          if (i === 0) directionClass = 'start'; // to determine which div if the start of the ship
+          if (i === draggedShipLength - 1) directionClass = 'end'; // and which is the end for styling purposes
+          userSquares[
+            parseInt(this.dataset.id) -
+              nbSquares * selectedShipGrabIndex +
+              nbSquares * i
+          ].classList.add('taken', 'vertical', directionClass, shipClass);
+        }
+      } else return;
     } else return;
 
     // remove ship from display grid once it's been placed
@@ -488,6 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Game logic for multiplayer
   function playGameMulti(socket) {
+    setupButtons.style.display = 'none';
     if (isGameOver) return;
     if (!ready) {
       socket.emit('player-ready');
@@ -507,9 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function playerReady(num) {
     let playerClass = `.p${parseInt(num) + 1}`;
-    document
-      .querySelector(`${playerClass} .ready span`)
-      .classList.toggle('green');
+    document.querySelector(`${playerClass} .ready`).classList.toggle('active');
   }
 
   // Game logic for single player
@@ -525,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
       );
     }
     if (currentPlayer === 'enemy') {
-      turnDisplay.innerHTML = "Computer's Go";
+      turnDisplay.innerHTML = "Enemy's Go";
       // delay of 1s before enemyGo function gets invoked
       setTimeout(enemyGo, 1000);
     }
@@ -537,15 +569,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let cruiserCount = 0;
   let battleshipCount = 0;
   let carrierCount = 0;
-  function revealSquare(classList) {
-    console.log('classList', classList);
-    console.log('shotFired', shotFired);
-    console.log('enemyGrid', enemyGrid);
-    console.log(
-      'enemyGrid.querySelector(div[data-id=${shotFired}])',
-      enemyGrid.querySelector(`div[data-id='${shotFired}']`)
-    );
 
+  function revealSquare(classList) {
     const enemySquare = enemyGrid.querySelector(`div[data-id='${shotFired}']`);
     const obj = Object.values(classList); // we turn our classList into an object so that we can more easily search through it
     if (
@@ -581,7 +606,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gameMode === 'singlePlayer')
       square = Math.floor(Math.random() * userSquares.length);
     if (!userSquares[square].classList.contains('boom')) {
-      userSquares[square].classList.add('boom');
+      const hit = userSquares[square].classList.contains('taken');
+      userSquares[square].classList.add(hit ? 'boom' : 'miss');
       if (userSquares[square].classList.contains('destroyer'))
         enemyDestroyerCount++;
       if (userSquares[square].classList.contains('submarine'))
@@ -593,11 +619,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (userSquares[square].classList.contains('carrier'))
         enemyCarrierCount++;
       checkForWins();
-    } else if (gameMode === 'singlePlayer') {
-      enemyGo();
-    }
+    } else if (gameMode === 'singlePlayer') enemyGo();
     currentPlayer = 'user';
-    // turnDisplay.innerHTML = 'Your Go';
+    turnDisplay.innerHTML = 'Your Go';
   }
 
   function checkForWins() {
