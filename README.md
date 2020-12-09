@@ -1,6 +1,6 @@
 # game-battleship
 
-![ScreenShot](img/game-battleship-500.jpg)
+![ScreenShot](public/img/game-battleship-500.jpg)
 
 Classic game of battleship adapted for the web. Users can choose to play either against the computer (single player mode) or against another user (multi player mode). The app is currently deployed on heroku at [https://game-battleship.herokuapp.com/](https://game-battleship.herokuapp.com/).
 
