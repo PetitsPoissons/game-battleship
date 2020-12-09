@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // on timeout
     socket.on('timeout', () => {
-      infoDisplay.innerHTML = 'You have reached the 10 minute limit.';
+      infoDisplay.innerHTML = 'You have reached the 15-minute limit.';
     });
 
     // 'ready' button click
@@ -185,10 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
       let playerClass = `.p${parseInt(num) + 1}`; // we want to access the classes .p1 or .p2
       document
         .querySelector(`${playerClass} .connected`)
-        .classList.toggle('active');
-      // if the player is disconnected then toggle ready back
-      document
-        .querySelector(`${playerClass} .ready`)
         .classList.toggle('active');
     }
   }
