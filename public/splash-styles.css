@@ -1,0 +1,117 @@
+/* Reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Main Styling */
+:root {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 62.5%;
+  --white: #f3f3f3;
+  --orange: #ef9544;
+  --orange-dark: #dc7920;
+  --grid: #add1d5;
+}
+
+body {
+  background-color: var(--white);
+  overflow-x: hidden;
+}
+
+.btn {
+  background-color: var(--orange);
+  padding: 0.5em 1em;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 0.2em;
+  color: #333;
+}
+
+.btn:hover,
+.btn:focus {
+  background-color: var(--orange-dark);
+}
+
+/* Splash Page */
+.splash-container {
+  background: url('/img/game-battleship-2560.jpg') no-repeat center center/cover;
+  height: 100vh;
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.splash-title {
+  font-family: 'Bangers', cursive;
+  font-size: 12rem;
+  text-align: center;
+}
+
+.splash-title h1 {
+  background-image: url(https://media.giphy.com/media/26BROrSHlmyzzHf3i/giphy.gif);
+  background-size: cover;
+  color: transparent;
+  -moz-background-clip: text;
+  -webkit-background-clip: text;
+  text-shadow: 0.2rem 0.4rem 0.3rem rgba(0, 0, 0, 0.3);
+}
+
+.splash-buttons {
+  margin-top: 5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.splash-btn {
+  font-size: 2rem;
+  margin: 0 2rem;
+  background: transparent;
+  border: 1px solid var(--grid);
+  color: var(--grid);
+}
+
+/* .splash-btn:first-child {
+  margin-left: 0;
+} */
+
+/* Mobile */
+@media (max-width: 2000px) {
+  .splash-container {
+    background: url('/img/game-battleship-2000.jpg') no-repeat center
+      center/cover;
+  }
+}
+@media (max-width: 1440px) {
+  .splash-container {
+    background: url('/img/game-battleship-1440.jpg') no-repeat center
+      center/cover;
+  }
+}
+@media (max-width: 1024px) {
+  .splash-container {
+    background: url('/img/game-battleship-1024.jpg') no-repeat center
+      center/cover;
+  }
+}
+@media (max-width: 768px) {
+  .splash-container {
+    background: url('/img/game-battleship-768.jpg') no-repeat center
+      center/cover;
+  }
+}
+@media (max-width: 500px) {
+  .splash-container {
+    background: url('/img/game-battleship-500.jpg') no-repeat center
+      center/cover;
+  }
+}

@@ -1,28 +1,60 @@
+/* Reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Main Styling */
+:root {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 62.5%;
+  --white: #f3f3f3;
+  --orange: #ef9544;
+  --orange-dark: #dc7920;
+  --grid: #add1d5;
+}
+
+body {
+  background-color: var(--white);
+  overflow-x: hidden;
+}
+
+.btn {
+  background-color: var(--orange);
+  padding: 0.5em 1em;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 0.2em;
+  color: #333;
+}
+
+.btn:hover,
+.btn:focus {
+  background-color: var(--orange-dark);
+}
+
+/* Battleship Grids */
 .container {
   display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
-.grid-user {
-  width: 400px;
-  height: 400px;
-  display: flex;
-  flex-wrap: wrap;
-  background-color: blue;
-  margin: 20px;
+.battleship-grid {
+  margin: 2vmin;
+  display: grid;
+  background-color: var(--grid);
+  grid-template-rows: repeat(10, 4.6vmin);
+  grid-template-columns: repeat(10, 4.6vmin);
 }
 
-.grid-enemy {
-  width: 400px;
-  height: 400px;
-  display: flex;
-  flex-wrap: wrap;
-  background-color: lightgreen;
-  margin: 20px;
-}
-
-.grid div {
-  width: 40px;
-  height: 40px;
+.battleship-grid div {
+  border: 1px solid rgba(0, 0, 0, 1);
 }
 
 /* where our ships are available to move */

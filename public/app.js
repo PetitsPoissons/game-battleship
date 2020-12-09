@@ -12,8 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const rotateButton = document.querySelector('#rotate');
   const turnDisplay = document.querySelector('#whose-go');
   const infoDisplay = document.querySelector('#info');
-  const singlePlayerButton = document.querySelector('#singlePlayerButton');
-  const multiPlayerButton = document.querySelector('#multiPlayerButton');
   const userSquares = [];
   const enemySquares = [];
   let isHorizontal = true;
@@ -22,21 +20,64 @@ document.addEventListener('DOMContentLoaded', () => {
   const nbSquares = 10; // grids are 10 squares x 10 squares
 
   // variables for multiplayer mode
-  let gameMode = '';
   let playerNum = 0;
   let ready = false;
   let enemyReady = false;
   let allShipsPlaced = false; // to verify both players placed their ships before the game
   let shotFired = -1;
 
+  // Ships
+  const shipArray = [
+    {
+      name: 'destroyer',
+      directions: [
+        [0, 1], // divs with ids 0 and 1 if we paint the ship horizontally
+        [0, nbSquares], // divs with ids 0 and 10 if we paint the ship vertically
+      ],
+    },
+    {
+      name: 'submarine',
+      directions: [
+        [0, 1, 2], // divs with ids 0, 1 and 2 if we paint the ship horizontally
+        [0, nbSquares, nbSquares * 2], // // divs with ids 0, 10 and 20 if we paint the ship vertically
+      ],
+    },
+    {
+      name: 'cruiser',
+      directions: [
+        [0, 1, 2], // divs with ids 0, 1 and 2 if we paint the ship horizontally
+        [0, nbSquares, nbSquares * 2], // divs with ids 0, 10 and 20 if we paint the ship verically
+      ],
+    },
+    {
+      name: 'battleship',
+      directions: [
+        [0, 1, 2, 3], // divs with ids 0, 1, 2 and 3 if we paint the ship horizontally
+        [0, nbSquares, nbSquares * 2, nbSquares * 3], // divs with ids 0, 10, 20 and 30 if we paint the ship vertically
+      ],
+    },
+    {
+      name: 'carrier',
+      directions: [
+        [0, 1, 2, 3, 4], // divs with ids 0, 1, 2, 3 and 4 if we paint the ship horizontally
+        [0, nbSquares, nbSquares * 2, nbSquares * 3, nbSquares * 4], // divs with ids 0, 10, 20, 30 and 40 if we paint the ship vertically
+      ],
+    },
+  ];
+
+  // Create the boards
+  createBoard(userGrid, userSquares);
+  createBoard(enemyGrid, enemySquares);
+
   // Select player mode
-  singlePlayerButton.addEventListener('click', startSinglePlayer);
-  multiPlayerButton.addEventListener('click', startMultiPlayer);
+  if (gameMode === 'singlePlayer') {
+    startSinglePlayer();
+  } else {
+    startMultiPlayer();
+  }
 
   // Multiplayer mode
   function startMultiPlayer() {
-    gameMode = 'multiPlayer';
-
     // start our socket connection
     const socket = io();
 
@@ -150,8 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Single player mode
   function startSinglePlayer() {
-    gameMode = 'singlePlayer';
-
     // generate & place computer ships
     for (let i = 0; i < shipArray.length; i++) {
       console.log('Placing ship: ', shipArray[i].name);
@@ -159,45 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     startButton.addEventListener('click', playGameSingle);
   }
-
-  // Ships
-  const shipArray = [
-    {
-      name: 'destroyer',
-      directions: [
-        [0, 1], // divs with ids 0 and 1 if we paint the ship horizontally
-        [0, nbSquares], // divs with ids 0 and 10 if we paint the ship vertically
-      ],
-    },
-    {
-      name: 'submarine',
-      directions: [
-        [0, 1, 2], // divs with ids 0, 1 and 2 if we paint the ship horizontally
-        [0, nbSquares, nbSquares * 2], // // divs with ids 0, 10 and 20 if we paint the ship vertically
-      ],
-    },
-    {
-      name: 'cruiser',
-      directions: [
-        [0, 1, 2], // divs with ids 0, 1 and 2 if we paint the ship horizontally
-        [0, nbSquares, nbSquares * 2], // divs with ids 0, 10 and 20 if we paint the ship verically
-      ],
-    },
-    {
-      name: 'battleship',
-      directions: [
-        [0, 1, 2, 3], // divs with ids 0, 1, 2 and 3 if we paint the ship horizontally
-        [0, nbSquares, nbSquares * 2, nbSquares * 3], // divs with ids 0, 10, 20 and 30 if we paint the ship vertically
-      ],
-    },
-    {
-      name: 'carrier',
-      directions: [
-        [0, 1, 2, 3, 4], // divs with ids 0, 1, 2, 3 and 4 if we paint the ship horizontally
-        [0, nbSquares, nbSquares * 2, nbSquares * 3, nbSquares * 4], // divs with ids 0, 10, 20, 30 and 40 if we paint the ship vertically
-      ],
-    },
-  ];
 
   // Create the user and the computer boards
   function createBoard(grid, squares) {
@@ -208,9 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
       squares.push(square);
     }
   }
-
-  createBoard(userGrid, userSquares);
-  createBoard(enemyGrid, enemySquares);
 
   // Draw each of the computer's ships in a random location
   function generate(ship) {
