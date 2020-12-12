@@ -9,6 +9,7 @@ We initially adapted this app from the fun and educational videos of YouTubers [
 - for the single player mode, the computer is programmed with a strategy to fire instead of random firing
 - for the multi player mode, users have chat area where they can engage with each other
 - for the multi player mode, users can set their own game time limit (no more than 30 minutes) instead of the default 15 minutes
+- for the multi player mode, there is a "waiting room" for users who are waiting to connect
 - the app is made mobile friendly
 - there are noise effects at firing, missing, and hitting
 
